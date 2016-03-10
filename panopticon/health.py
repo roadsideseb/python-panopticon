@@ -2,7 +2,7 @@ import time
 
 from functools import wraps
 from datetime import datetime
-from collections import OrderedDict, namedtuple
+from collections import namedtuple
 
 
 HealthCheckResult = namedtuple('HealthCheckResult',
@@ -10,6 +10,9 @@ HealthCheckResult = namedtuple('HealthCheckResult',
 
 
 class HealthCheck(object):
+    """
+    A generic handler for health checks to register and run them.
+    """
     HEALTY = 'healthy'
     RESPONSE_TIME = 'response_time'
     SERVICE_HEALTHY = 'service_healthy'
@@ -21,6 +24,16 @@ class HealthCheck(object):
 
     @classmethod
     def register_healthcheck(cls, func):
+        """
+        A decorator to register a health check function.
+
+        A health check function is an arbitrary function that will accept a
+        `data` dictionary as the first argument::
+
+                @HealthCheck.register_healthcheck
+                def my_health_check(data):
+                    pass
+        """
         func_name = func.__name__
 
         @wraps(func)
