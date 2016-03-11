@@ -4,8 +4,16 @@ import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
-requires = ['six']
+requires = ['six', 'requests']
+
 tests_requires = ['pytest', 'pytest-cache', 'pytest-cov']
+
+
+# Mock is part of Python 3 so we only need it in Python 2.x
+if sys.version_info < (3,):
+    tests_requires.append('mock')
+
+
 dev_requires = ['tox']
 
 

@@ -1,9 +1,11 @@
 *.sw[a-z]
 *.py[cox]
+*.egg-info
 
 .coverage
 
 .cache/
 .tox/
+.eggs/
 
 htmlcov/

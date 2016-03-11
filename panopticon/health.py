@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, absolute_import
 import time
+import requests
 
 from functools import wraps
 from datetime import datetime
@@ -10,10 +13,7 @@ HealthCheckResult = namedtuple('HealthCheckResult',
 
 
 class HealthCheck(object):
-    """
-    A generic handler for health checks to register and run them.
-    """
-    HEALTY = 'healthy'
+    HEALTHY = 'healthy'
     RESPONSE_TIME = 'response_time'
     SERVICE_HEALTHY = 'service_healthy'
     TIMESTAMP = 'timestamp'
@@ -24,16 +24,6 @@ class HealthCheck(object):
 
     @classmethod
     def register_healthcheck(cls, func):
-        """
-        A decorator to register a health check function.
-
-        A health check function is an arbitrary function that will accept a
-        `data` dictionary as the first argument::
-
-                @HealthCheck.register_healthcheck
-                def my_health_check(data):
-                    pass
-        """
         func_name = func.__name__
 
         @wraps(func)
@@ -41,7 +31,7 @@ class HealthCheck(object):
             # Let's pass in a pre-populated dict so we can ensure certain
             # values being in the dict.
             data = {
-                cls.HEALTY: False,
+                cls.HEALTHY: False,
                 cls.STATUS_MESSAGE: "Health check didn't provide a status 😭."}
 
             start = time.time()
@@ -57,21 +47,24 @@ class HealthCheck(object):
 
             return HealthCheckResult(name=func_name,
                                      data=data,
-                                     is_healthy=data.get(cls.HEALTY, False))
+                                     is_healthy=data.get(cls.HEALTHY, False))
 
         if func_name not in cls.health_checks:
             cls.health_checks[func_name] = wrapped
 
         return wrapped
 
+    def get_health_check_functions(self):
+        return self.health_checks.values()
+
     def run(self):
         components = []
 
-        for health_check in self.health_checks.values():
+        for health_check in self.get_health_check_functions():
             result = health_check()
             components.append(result)
 
-        is_healthy = all([r.is_healthy for r in components])
+        is_healthy = all(r.is_healthy for r in components)
 
         data = {self.SERVICE_HEALTHY: is_healthy,
                 self.TIMESTAMP: datetime.now().isoformat(),
@@ -80,3 +73,29 @@ class HealthCheck(object):
         return HealthCheckResult(name='system',
                                  data=data,
                                  is_healthy=is_healthy)
+
+
+def check_url(url, expected_status=200):
+    """
+    A simple check if `url` is reachable and resturns `expected_status`.
+    """
+    if not url:
+        return {HealthCheck.HEALTHY: False,
+                HealthCheck.STATUS_MESSAGE: 'No URL specified to check.'}
+
+    try:
+        response = requests.get(url, timeout=2)
+    except requests.RequestException as exc:
+        message = 'Error connecting to URL: {}'.format(str(exc))
+        return {HealthCheck.HEALTHY: False,
+                HealthCheck.STATUS_MESSAGE: message}
+
+    if expected_status == response.status_code:
+        return {HealthCheck.HEALTHY: True,
+                HealthCheck.STATUS_MESSAGE: 'URL is available'}
+
+    message = 'server responded with unexpected status code: {}'.format(
+        response.status_code)
+
+    return {HealthCheck.HEALTHY: False,
+            HealthCheck.STATUS_MESSAGE: message}
