@@ -12,10 +12,9 @@ at `Mobify <https://mobify.com>`_ for our services.
 Installation
 ------------
 
-You can install it from PyPI:
+You can install it straight from the repo:: 
 
-.. code:: shell
-    $ pip install python-panopticon
+    $ pip install https://github.com/mobify/python-panopticon/archive/master.zip
 
 
 License
