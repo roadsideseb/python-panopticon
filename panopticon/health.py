@@ -75,7 +75,7 @@ class HealthCheck(object):
                                  is_healthy=is_healthy)
 
 
-def check_url(url, expected_status=200):
+def check_url(url, expected_status=200, timeout=5):
     """
     A simple check if `url` is reachable and resturns `expected_status`.
     """
@@ -84,7 +84,7 @@ def check_url(url, expected_status=200):
                 HealthCheck.STATUS_MESSAGE: 'No URL specified to check.'}
 
     try:
-        response = requests.get(url, timeout=2)
+        response = requests.get(url, timeout=timeout)
     except requests.RequestException as exc:
         message = 'Error connecting to URL: {}'.format(str(exc))
         return {HealthCheck.HEALTHY: False,
