@@ -2,13 +2,9 @@
 from __future__ import unicode_literals, absolute_import
 import pytest
 
-try:
-    from unittest import mock
-except ImportError:
-    import mock
-
 from requests import Timeout, ConnectionError, HTTPError
 
+from panopticon.compat import mock
 from panopticon.health import check_url
 
 

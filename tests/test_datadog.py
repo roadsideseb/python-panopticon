@@ -1,4 +1,4 @@
-from unittest import mock
+from panopticon.compat import mock
 
 from panopticon.datadog import DataDog
 

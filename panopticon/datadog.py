@@ -3,8 +3,8 @@ import atexit
 import datadog
 
 from functools import wraps
-from unittest import mock
 
+from .compat import mock
 from . import PanopticonSettings
 
 
