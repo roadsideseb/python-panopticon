@@ -4,8 +4,7 @@ import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
-requires = ['six', 'requests']
-
+requires = ['six', 'requests', 'datadog']
 tests_requires = ['pytest', 'pytest-cache', 'pytest-cov']
 
 

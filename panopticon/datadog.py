@@ -5,7 +5,7 @@ import datadog
 from functools import wraps
 from unittest import mock
 
-from django.conf import settings
+from . import PanopticonSettings
 
 
 class DataDog(object):
@@ -15,12 +15,37 @@ class DataDog(object):
 
     # this is just the default
     STATS_ENABLED = False
-    STATS_PREFIX = 'mobify'
+    STATS_PREFIX = 'panopticon'
 
     ROLLUP_INTERVAL = 10
     FLUSH_INTERVAL = 10
 
     _stats_instance = None
+    settings = PanopticonSettings()
+
+    @staticmethod
+    def _get_value_for_key(settings, key, default=None):
+        try:
+            value = settings.get(key, default)
+        except AttributeError:
+            value = getattr(settings, key, default)
+
+        return value
+
+    @classmethod
+    def configue_settings(cls, settings):
+        """
+        Configure the settings to be used within datadog.
+        """
+        cls.STATS_ENABLED = cls._get_value_for_key(settings,
+                                                   cls.KEY_DATADOG_ENABLED,
+                                                   default=False)
+        cls.STATS_PREFIX = cls._get_value_for_key(settings,
+                                                  cls.KEY_DATADOG_STATS_PREFIX,
+                                                  default=cls.STATS_PREFIX)
+
+        api_key = cls._get_value_for_key(cls.settings, cls.KEY_DATADOG_API_KEY)
+        setattr(cls.settings, cls.KEY_DATADOG_API_KEY, api_key)
 
     @classmethod
     def stats(cls):
@@ -31,18 +56,14 @@ class DataDog(object):
         is `False`. This makes it possible to run this in development without
         having to make any additional changes or conditional checks.
         """
-        cls.STATS_ENABLED = getattr(settings, cls.KEY_DATADOG_ENABLED, False)
-        cls.STATS_PREFIX = getattr(settings, cls.KEY_DATADOG_STATS_PREFIX)
-
         if cls._stats_instance:
             return cls._stats_instance
-
-        api_key = getattr(settings, cls.KEY_DATADOG_API_KEY)
 
         # If datadog is disabled by the Django setting DATADOG_ENABLED, we use
         # a mock object instead of the actual datadog client. This makes it
         # easier to switch it out without too much additional work and should
         # be good enough for development.
+        api_key = getattr(cls.settings, cls.KEY_DATADOG_API_KEY, None)
         if cls.STATS_ENABLED is False or not api_key:
             cls._stats_instance = mock.Mock()
 
