@@ -7,6 +7,8 @@ from functools import wraps
 from datetime import datetime
 from collections import namedtuple
 
+from .datadog import DataDog
+
 
 HealthCheckResult = namedtuple('HealthCheckResult',
                                ('name', 'data', 'is_healthy'))
@@ -45,9 +47,19 @@ class HealthCheck(object):
             if cls.RESPONSE_TIME not in data:
                 data[cls.RESPONSE_TIME] = time.time() - start
 
+            # Let's trigger an event in Datadog if a healthcheck fails so we
+            # can see how it effects other metrics.
+            healthy = data.get(cls.HEALTHY, False)
+            if not healthy:
+                DataDog.stats().event(
+                    title='Healthcheck {} failed'.format(func_name),
+                    text=str(data),
+                    tags=['application:healtcheck'],
+                    alert_type='error')
+
             return HealthCheckResult(name=func_name,
                                      data=data,
-                                     is_healthy=data.get(cls.HEALTHY, False))
+                                     is_healthy=healthy)
 
         if func_name not in cls.health_checks:
             cls.health_checks[func_name] = wrapped
