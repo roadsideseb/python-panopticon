@@ -38,7 +38,8 @@ setup(
     author="Mobify Research & Develpment Inc.",
     author_email="ops@mobify.com",
     url="https://python-panopticon.readthedocs.org",
-    packages=['panopticon'],
+    packages=['panopticon',
+              'panopticon.django'],
     install_requires=requires,
     classifiers=[
         'Development Status :: 1 - Planning',
