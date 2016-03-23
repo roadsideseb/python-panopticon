@@ -1,1 +1,1 @@
-default_app_config = 'panopticon.django.PanopticonConfig'
+default_app_config = 'panopticon.django.apps.PanopticonConfig'

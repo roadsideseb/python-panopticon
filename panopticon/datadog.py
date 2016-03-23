@@ -35,7 +35,7 @@ class DataDog(object):
         return value
 
     @classmethod
-    def configue_settings(cls, settings):
+    def configure_settings(cls, settings):
         """
         Configure the settings to be used within datadog.
         """
