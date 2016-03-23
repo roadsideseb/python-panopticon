@@ -9,7 +9,7 @@ from panopticon.datadog import DataDog
 
 class PanopticonConfig(AppConfig):
     name = 'panopticon.django'
-    app_name = 'panopticon'
+    label = 'panopticon'
     verbose_name = 'Panopticon'
 
     def ready(self):

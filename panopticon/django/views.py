@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, absolute_import
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .health import HealthCheck
+from ..health import HealthCheck
 
 
 class HealthCheckView(APIView):

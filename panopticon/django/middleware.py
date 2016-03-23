@@ -2,7 +2,7 @@
 from __future__ import unicode_literals, absolute_import
 import time
 
-from .datadog import DataDog
+from panopticon.datadog import DataDog
 
 
 class DataDogMiddleware(object):
