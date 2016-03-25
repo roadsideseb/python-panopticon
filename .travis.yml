@@ -1,5 +1,10 @@
 language: python
 
+# Setup Python 3.5 on Travis
+# https://github.com/travis-ci/travis-ci/issues/4794
+python:
+    - 3.5
+
 env:
     matrix:
         - TOX_ENV=py27
