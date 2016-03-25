@@ -46,7 +46,7 @@ class DataDog(object):
                                                   cls.KEY_DATADOG_STATS_PREFIX,
                                                   default=cls.STATS_PREFIX)
 
-        api_key = cls._get_value_for_key(cls.settings, cls.KEY_DATADOG_API_KEY)
+        api_key = cls._get_value_for_key(settings, cls.KEY_DATADOG_API_KEY)
         setattr(cls.settings, cls.KEY_DATADOG_API_KEY, api_key)
 
     @classmethod

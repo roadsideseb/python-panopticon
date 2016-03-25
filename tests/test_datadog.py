@@ -34,3 +34,12 @@ def test_track_time():
 
         assert histogram.call_count == 1
         assert histogram.call_args[0] == ('my_fancy_prefix.track_time_test', 1)
+
+
+def test_api_key():
+    DataDog.configure_settings({'DATADOG_API_KEY': 'test_api_key'})
+
+    configured_api_key = getattr(DataDog.settings,
+                                 DataDog.KEY_DATADOG_API_KEY)
+
+    assert configured_api_key == 'test_api_key'
