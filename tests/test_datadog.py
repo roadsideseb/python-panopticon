@@ -6,7 +6,7 @@ from panopticon.datadog import DataDog
 
 
 def test_can_create_prefixed_metric_name():
-    DataDog.configue_settings({'DATADOG_STATS_ENABLED': True,
+    DataDog.configure_settings({'DATADOG_STATS_ENABLED': True,
                                'DATADOG_STATS_PREFIX': 'my_fancy_prefix'})
 
     DataDog.stats()
@@ -18,7 +18,7 @@ def test_can_create_prefixed_metric_name():
 
 
 def test_track_time():
-    DataDog.configue_settings({'DATADOG_STATS_PREFIX': 'my_fancy_prefix'})
+    DataDog.configure_settings({'DATADOG_STATS_PREFIX': 'my_fancy_prefix'})
 
     with mock.patch('panopticon.datadog.time.time') as time:
         time.side_effect = [1, 2]
