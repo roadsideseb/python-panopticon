@@ -6,7 +6,7 @@ from panopticon.datadog import DataDog
 
 
 def test_can_create_prefixed_metric_name():
-    DataDog.configue_settings({'DATADOG_STATS_ENABLED': True,
+    DataDog.configure_settings({'DATADOG_STATS_ENABLED': True,
                                'DATADOG_STATS_PREFIX': 'my_fancy_prefix'})
 
     DataDog.stats()
@@ -18,7 +18,7 @@ def test_can_create_prefixed_metric_name():
 
 
 def test_track_time():
-    DataDog.configue_settings({'DATADOG_STATS_PREFIX': 'my_fancy_prefix'})
+    DataDog.configure_settings({'DATADOG_STATS_PREFIX': 'my_fancy_prefix'})
 
     with mock.patch('panopticon.datadog.time.time') as time:
         time.side_effect = [1, 2]
@@ -34,3 +34,12 @@ def test_track_time():
 
         assert histogram.call_count == 1
         assert histogram.call_args[0] == ('my_fancy_prefix.track_time_test', 1)
+
+
+def test_api_key():
+    DataDog.configure_settings({'DATADOG_API_KEY': 'test_api_key'})
+
+    configured_api_key = getattr(DataDog.settings,
+                                 DataDog.KEY_DATADOG_API_KEY)
+
+    assert configured_api_key == 'test_api_key'
