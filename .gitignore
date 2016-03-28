@@ -9,3 +9,5 @@
 .eggs/
 
 htmlcov/
+build/
+dist/
