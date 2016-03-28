@@ -13,7 +13,7 @@ if sys.version_info < (3,):
     tests_requires.append('mock')
 
 
-dev_requires = ['tox']
+dev_requires = ['tox', 'bumpversion', 'twine']
 
 
 class PyTest(TestCommand):

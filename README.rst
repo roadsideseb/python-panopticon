@@ -139,6 +139,21 @@ present and can be relied upon for external processing, e.g. ``service_healthy``
     }
 
 
+Creating a Release
+------------------
+
+Creating a new release is simple using `bumpversion
+<https://github.com/peritus/bumpversion>`_ which ensures that naming tags and
+updating *all* version numbers in the Python code is ensured. To create a new
+version specify the type of version bump (either major, minor or patch) and 
+bumpversion will do the rest. For a patch it looks like this::
+
+    $ bumpversion patch
+
+This will create a new commit with the bumped version as well as a new tag.
+Make sure that you push both the commit and the tag up.
+
+
 License
 -------
 
