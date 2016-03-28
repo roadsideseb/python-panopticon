@@ -30,14 +30,14 @@ class PyTest(TestCommand):
 
 
 setup(
-    name="python-panopticon",
+    name='python-panopticon',
     version='0.0.0',
-    description="A collection of healthcheck and monitoring helpers.",
-    long_description="\n\n".join([open("README.rst").read()]),
+    description='A collection of healthcheck and monitoring helpers.',
+    long_description='\n\n'.join([open('README.rst').read()]),
     license=open('LICENSE').read(),
-    author="Mobify Research & Develpment Inc.",
-    author_email="ops@mobify.com",
-    url="https://python-panopticon.readthedocs.org",
+    author='Mobify Research & Develpment Inc.',
+    author_email='ops@mobify.com',
+    url='https://python-panopticon.readthedocs.org',
     packages=['panopticon',
               'panopticon.django'],
     install_requires=requires,
@@ -50,6 +50,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython'],
     extras_require={'test': tests_requires,
                     'dev': dev_requires},
