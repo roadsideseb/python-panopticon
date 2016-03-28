@@ -31,7 +31,7 @@ class PyTest(TestCommand):
 
 setup(
     name='python-panopticon',
-    version='0.0.0',
+    version='0.1.0',
     description='A collection of healthcheck and monitoring helpers.',
     long_description='\n\n'.join([open('README.rst').read()]),
     license=open('LICENSE').read(),
