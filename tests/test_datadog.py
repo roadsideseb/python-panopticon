@@ -39,7 +39,6 @@ def test_track_time():
 def test_api_key():
     DataDog.configure_settings({'DATADOG_API_KEY': 'test_api_key'})
 
-    configured_api_key = getattr(DataDog.settings,
-                                 DataDog.KEY_DATADOG_API_KEY)
+    configured_api_key = DataDog.settings[DataDog.KEY_DATADOG_API_KEY]
 
     assert configured_api_key == 'test_api_key'

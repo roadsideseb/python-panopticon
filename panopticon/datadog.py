@@ -47,7 +47,7 @@ class DataDog(object):
                                                   default=cls.STATS_PREFIX)
 
         api_key = cls._get_value_for_key(settings, cls.KEY_DATADOG_API_KEY)
-        setattr(cls.settings, cls.KEY_DATADOG_API_KEY, api_key)
+        cls.settings[cls.KEY_DATADOG_API_KEY] = api_key
 
     @classmethod
     def stats(cls):
@@ -65,7 +65,7 @@ class DataDog(object):
         # a mock object instead of the actual datadog client. This makes it
         # easier to switch it out without too much additional work and should
         # be good enough for development.
-        api_key = getattr(cls.settings, cls.KEY_DATADOG_API_KEY, None)
+        api_key = cls.settings.get(cls.KEY_DATADOG_API_KEY, None)
         if cls.STATS_ENABLED is False or not api_key:
             cls._stats_instance = mock.Mock()
 
