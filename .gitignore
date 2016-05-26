@@ -1,6 +1,7 @@
 *.sw[a-z]
 *.py[cox]
 *.egg-info
+.env*
 
 .coverage
 
