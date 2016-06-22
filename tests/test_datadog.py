@@ -1,10 +1,33 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 import collections
+import random
+import string
 
 from panopticon.compat import mock
-
 from panopticon.datadog import DataDog
+import pytest
+
+
+def random_string(
+    choose_from=None,
+    length=8
+):
+    """
+    Return a random sequence of characters
+
+    Args:
+        choose_from (Sequence): he set of eligible characters - by default
+            the set is string.ascii_lowercase + string.digits
+        length (int): the length of the sequence to be
+            returned (in characters, default 8)
+    Returns (string)
+    """
+    choices = list(choose_from or (string.ascii_lowercase + string.digits))
+    return ''.join(
+        random.choice(choices)
+        for _ in range(length)
+    )
 
 
 def test_can_create_prefixed_metric_name():
@@ -46,42 +69,52 @@ def test_api_key():
     assert configured_api_key == 'test_api_key'
 
 
-def test_metrics():
+@pytest.mark.parametrize(
+    'method_name',
+    ['gauge', 'increment', 'decrement', 'histogram']
+)
+def test_metrics(method_name):
     metric_prefix = test_metrics.__name__
     DataDog.configure_settings({'DATADOG_STATS_ENABLED': True,
                                 'DATADOG_STATS_PREFIX': metric_prefix})
 
     mock_dd = DataDog.stats()
-    for method in ['gauge', 'increment', 'decrement', 'histogram', 'event']:
-        setattr(mock_dd, method, mock.Mock())
+    mock_dd.reset_mock()
+    mocked_method = mock.Mock()
+    setattr(mock_dd, method_name, mocked_method)
 
-    DataDog.gauge('abc', 2, tags={'xyz1': 123})
-    mock_dd.gauge.assert_called_with(
-        metric_prefix + '.abc',
-        value=2,
-        tags=['xyz1:123']
+    dd_method = getattr(DataDog, method_name)
+    metric_name = random_string()
+    value = random.randint(1, 11)
+
+    tags = collections.OrderedDict(
+        (
+            (random_string(), random_string())
+            for _ in range(random.randint(1, 4))
+        )
     )
 
-    DataDog.increment('def.fed', 3, tags={'xyz2': 456})
-    mock_dd.increment.assert_called_with(
-        metric_prefix + '.def.fed',
-        value=3,
-        tags=['xyz2:456']
+    dd_method(metric_name, value, tags=tags)
+
+    mocked_method.assert_called_once()
+    mocked_method.assert_called_with(
+        metric_prefix + '.' + metric_name,
+        value=value,
+        tags=[
+            key + ':' + value
+            for key, value in tags.items()
+        ]
     )
 
-    DataDog.decrement('', 4, tags={'xyz3': 'ping'})
-    mock_dd.decrement.assert_called_with(
-        metric_prefix + '.',
-        value=4,
-        tags=['xyz3:ping']
-    )
 
-    DataDog.histogram('jkl', 1.23, tags={'xyz4': 4.56})
-    mock_dd.histogram.assert_called_with(
-        metric_prefix + '.jkl',
-        value=1.23,
-        tags=['xyz4:4.56']
-    )
+def test_event():
+    metric_prefix = test_event.__name__
+    DataDog.configure_settings({'DATADOG_STATS_ENABLED': True,
+                                'DATADOG_STATS_PREFIX': metric_prefix})
+
+    mock_dd = DataDog.stats()
+    mock_dd.reset_mock()
+    mock_dd.event = mock.Mock()
 
     tags = collections.OrderedDict(
         [

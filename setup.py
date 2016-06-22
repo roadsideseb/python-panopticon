@@ -5,7 +5,7 @@ from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
 requires = ['six', 'requests', 'datadog']
-tests_requires = ['pytest', 'pytest-cache', 'pytest-cov']
+tests_requires = ['pytest', 'pytest-cache', 'pytest-cov', 'mock']
 
 
 # Mock is part of Python 3 so we only need it in Python 2.x

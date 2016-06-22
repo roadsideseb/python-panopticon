@@ -194,8 +194,12 @@ class DataDog(object):
         """
         Convert tags, which may be a dict or iterable, into
         the DataDog format of a list of 'key:value' strings.
-        :param tags: dict or iterable
-        :return: list
+
+        Args:
+            tags (Dict, Sequence):
+
+        Returns:
+            [str]
         """
         if isinstance(tags, dict):
             return [
@@ -211,11 +215,10 @@ class DataDog(object):
         Record a gauge value (for a gauge, the latest value within any one
         minute is the value stored).
 
-        :param metric_name: name of the value metric to be stored
-        :type metric_name: string
-        :param value: integer value
-        :param tags: miscellaneous tags to further describe the value
-        :type tags: dict or list
+        Args:
+            metric_name (str): name of the metric to be stored
+            value (int or float): the value of the metric
+            tags (list or dict): miscellaneous tags to describe the value
         """
         cls.stats().gauge(
             cls.get_metric_name(metric_name),
@@ -230,11 +233,10 @@ class DataDog(object):
         Increment a metric_name value (all the increments and decrements within
         a given minute are summed together).
 
-        :param metric_name: name of the value metric to be incremented
-        :type metric_name: string
-        :param value: value by which to increment the metric (default is 1)
-        :param tags: miscellaneous tags to further describe the value
-        :type tags: dict or list
+        Args:
+            metric_name (str): name of the metric to be incremented
+            value (int or float): how much to increment the metric value
+            tags (list or dict): miscellaneous tags to describe the value
         """
         cls.stats().increment(
             cls.get_metric_name(metric_name),
@@ -249,11 +251,10 @@ class DataDog(object):
         Decrement a metric_name value (all the increments and decrements within
         a given minute are summed together).
 
-        :param metric_name: name of the value metric to be decremented
-        :type metric_name: string
-        :param value: value by which to decrement the metric (default is 1)
-        :param tags: miscellaneous tags to further describe the value
-        :type tags: dict or list
+        Args:
+            metric_name (str): name of the metric to be decremented
+            value (int or float): how much to decrement the metric value
+            tags (list or dict): miscellaneous tags to describe the value
         """
         cls.stats().decrement(
             cls.get_metric_name(metric_name),
@@ -269,10 +270,10 @@ class DataDog(object):
         of the recorded values of a metric (minimum, maximum, average, count
         and the 75th, 85th, 95th and 99th percentiles).
 
-        :param metric_name: name of the metric
-        :param value: value to be recorded
-        :param tags: miscellaneous tags to further describe the value
-        :type tags: dict or list
+        Args:
+            metric_name (str): name of the metric to be stored
+            value (int or float): the value of the metric
+            tags (list or dict): miscellaneous tags to describe the value
         """
         cls.stats().histogram(
             cls.get_metric_name(metric_name),
@@ -289,9 +290,11 @@ class DataDog(object):
         Note that an event title is not a metric name, so no
         DATADOG_STATS_PREFIX value is prepended to it.
 
-        :param title: Event title (string)
-        :param text: Optional event text (string), support MarkDown (see
-            http://docs.datadoghq.com/guides/markdown/ )
+        Args:
+            title (str): Event title
+            text (str or None): Optional event text (string), supports
+                MarkDown (see http://docs.datadoghq.com/guides/markdown/ )
+            tags (list or dict): miscellaneous tags to describe the value
         """
         cls.stats().event(
             title,
