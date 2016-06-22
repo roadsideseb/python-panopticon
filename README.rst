@@ -148,7 +148,24 @@ present and can be relied upon for external processing, e.g. ``service_healthy``
 Setup Development
 -----------------
 
+The development setup is using `tox <https://tox.readthedocs.io/en/latest>`_
+for testing against various versions of Python. Running tox tests is quit
+simple for a given Python version that you have installed locally. For instance
+running tox with Python 2.7.10::
 
+    $ pip install tox
+    $ tox -e py27
+
+or for Python 3.5::
+
+    $ tox -e py35
+
+
+If you prefer to install and run the tests inside a virtualenv, you can install
+all the test and release requirements inside a virtualenv using::
+
+    $ pip install -e ".[test]"
+    $ pip install -e ".[dev]"
 
 
 Creating a Release
