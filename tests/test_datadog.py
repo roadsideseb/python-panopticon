@@ -96,7 +96,7 @@ def test_metrics(method_name):
 
     dd_method(metric_name, value, tags=tags)
 
-    mocked_method.assert_called_once()
+    assert mocked_method.call_count == 1
     mocked_method.assert_called_with(
         metric_prefix + '.' + metric_name,
         value=value,
