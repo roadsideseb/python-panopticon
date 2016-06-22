@@ -5,7 +5,7 @@ from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
 requires = ['six', 'requests', 'datadog']
-tests_requires = ['pytest', 'pytest-cache', 'pytest-cov']
+tests_requires = ['pytest', 'pytest-cache', 'pytest-cov', 'mock']
 
 
 # Mock is part of Python 3 so we only need it in Python 2.x
@@ -31,7 +31,7 @@ class PyTest(TestCommand):
 
 setup(
     name='python-panopticon',
-    version='0.1.1',
+    version='0.2.0',
     description='A collection of healthcheck and monitoring helpers.',
     long_description='\n\n'.join([open('README.rst').read()]),
     license=open('LICENSE').read(),
