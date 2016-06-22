@@ -15,7 +15,8 @@ matrix:
             - TOX_ENV=py35
 
 before_script:
-    - pip install tox
+    - pip install tox rstcheck
 
 script:
     - tox -e ${TOX_ENV}
+    - rstcheck README.rst

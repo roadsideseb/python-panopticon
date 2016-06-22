@@ -114,6 +114,7 @@ present and can be relied upon for external processing, e.g. ``service_healthy``
 ``timestamp``, ``components`` and ``healthy`` within each of the components.
 
 .. code:: javascript
+
     {
         // This represents the overall health of the service
         // If all of the components are healthy this should be true, false otherwise.
@@ -144,19 +145,42 @@ present and can be relied upon for external processing, e.g. ``service_healthy``
     }
 
 
+Setup Development
+-----------------
+
+
+
+
 Creating a Release
 ------------------
 
-Creating a new release is simple using `bumpversion
+Creating a new release is simple. We use `bumpversion
 <https://github.com/peritus/bumpversion>`_ which ensures that naming tags and
 updating *all* version numbers in the Python code is ensured. To create a new
-version specify the type of version bump (either major, minor or patch) and 
-bumpversion will do the rest. For a patch it looks like this::
+version specify the type of version bump (either *major*, *minor* or *patch*)
+and bumpversion will do the rest. For a patch it looks like this::
 
     $ bumpversion patch
 
-This will create a new commit with the bumped version as well as a new tag.
-Make sure that you push both the commit and the tag up.
+This will do the following:
+
+* Change all version strings defined in ``bumpversion.cfg``.
+* Create a new commit.
+* Create a new tag with the given version number.
+   
+**Note** A new release should only be created on the ``master`` branch after
+one or more changes have been merged and tested.
+
+After releasing a new version, the commit and tag have to be pushed to github::
+
+    $ git push 
+    $ git push --tags
+
+You can now release this version to PyPI using the Makefile. This requires
+the password for the ``mobify`` user to be exported in your shell. You can find
+it in LastPass::
+
+    $ PYPI_PASSWORD=<the password> make release
 
 
 License
