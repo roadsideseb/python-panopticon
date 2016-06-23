@@ -196,8 +196,7 @@ class DataDog(object):
         the DataDog format of a list of 'key:value' strings.
 
         To make it easier to write test assertions that validate
-        mock calls, if the stats object has been mocked, the
-        resulting list is sorted.
+        mock calls, the resulting list is sorted.
 
         Args:
             tags (Dict, Sequence):
@@ -213,10 +212,7 @@ class DataDog(object):
         else:
             result = list(tags)
 
-        if isinstance(cls._stats_instance, mock.Mock):
-            return sorted(result)
-
-        return result
+        return sorted(result)
 
     @classmethod
     def gauge(cls, metric_name, value, tags=None, **kwargs):

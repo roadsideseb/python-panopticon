@@ -102,7 +102,7 @@ def test_metrics(method_name):
         value=value,
         tags=sorted(
             [
-                key + ':' + value
+                '{}:{}'.format(key, value)
                 for key, value in tags.items()
             ]
         )
