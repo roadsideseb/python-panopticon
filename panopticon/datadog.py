@@ -189,11 +189,14 @@ class DataDog(object):
 
         return track_time_decorator
 
-    @staticmethod
-    def _convert_tags(tags):
+    @classmethod
+    def _convert_tags(cls, tags):
         """
         Convert tags, which may be a dict or iterable, into
         the DataDog format of a list of 'key:value' strings.
+
+        To make it easier to write test assertions that validate
+        mock calls, the resulting list is sorted.
 
         Args:
             tags (Dict, Sequence):
@@ -202,12 +205,14 @@ class DataDog(object):
             [str]
         """
         if isinstance(tags, dict):
-            return [
+            result = [
                 '{}:{}'.format(key, value)
                 for key, value in tags.items()
             ]
+        else:
+            result = list(tags)
 
-        return list(tags)
+        return sorted(result)
 
     @classmethod
     def gauge(cls, metric_name, value, tags=None, **kwargs):

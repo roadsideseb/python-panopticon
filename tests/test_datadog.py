@@ -100,10 +100,12 @@ def test_metrics(method_name):
     mocked_method.assert_called_with(
         metric_prefix + '.' + metric_name,
         value=value,
-        tags=[
-            key + ':' + value
-            for key, value in tags.items()
-        ]
+        tags=sorted(
+            [
+                '{}:{}'.format(key, value)
+                for key, value in tags.items()
+            ]
+        )
     )
 
 
@@ -127,5 +129,5 @@ def test_event():
     mock_dd.event.assert_called_with(
         'mno',
         'This is the text',
-        tags=['xyz5:567', 'abc2:pqr']
+        tags=['abc2:pqr', 'xyz5:567']
     )
