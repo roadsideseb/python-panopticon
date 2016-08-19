@@ -4,7 +4,7 @@ import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
-requires = ['six', 'requests', 'datadog']
+requires = ['six', 'requests', 'datadog', 'structlog', 'djangorestframework']
 tests_requires = ['pytest', 'pytest-cache', 'pytest-cov', 'mock']
 
 
@@ -13,7 +13,7 @@ if sys.version_info < (3,):
     tests_requires.append('mock')
 
 
-dev_requires = ['tox', 'bumpversion', 'twine', 'wheel']
+dev_requires = ['tox', 'bumpversion', 'twine', 'wheel', 'django']
 
 
 class PyTest(TestCommand):
