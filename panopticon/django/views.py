@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from ..health import HealthCheck
 
 
+class PrettyJsonRenderer(JSONRenderer):
+    def get_indent(self, accepted_media_type, renderer_context):
+        return 2
+
+
 class HealthCheckView(APIView):
     permission_classes = []
+    renderer_classes = (PrettyJsonRenderer, )
 
     def get(self, request, *args, **kwargs):
         health_check = HealthCheck()
