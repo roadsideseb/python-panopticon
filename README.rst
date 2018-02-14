@@ -41,7 +41,7 @@ can simply add the following line to your main project ``urls.py``:
     urlpatterns = [
         ...
 
-        url(r'', include('panopticon.urls', namespace='panopticon')),
+        url(r'', include('panopticon.django.urls', namespace='panopticon')),
     ]
 
 Using this view at this point requires ``django-rest-framework`` (DRF) to be
