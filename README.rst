@@ -2,8 +2,8 @@ python-panopticon
 #################
 
 
-.. image:: https://travis-ci.org/mobify/python-panopticon.svg?branch=master
-   :target: https://travis-ci.org/mobify/python-panopticon
+.. image:: https://travis-ci.org/elbaschid/python-panopticon.svg?branch=master
+   :target: https://travis-ci.org/elbaschid/python-panopticon
 
 Panopticon is a collection of health check and monitoring helpers that we use
 at `Mobify <https://mobify.com>`_ for our services.
@@ -19,7 +19,7 @@ The easiest way to install it is from PyPI::
 
 You can also install it straight from the repo:: 
 
-    $ pip install https://github.com/mobify/python-panopticon/archive/master.zip
+    $ pip install https://github.com/elbaschid/python-panopticon/archive/master.zip
 
 
 Setup with Django
@@ -39,9 +39,9 @@ can simply add the following line to your main project ``urls.py``:
 
     #urls.py
     urlpatterns = [
-        ...
+        # all your other URLs
 
-        url(r'', include('panopticon.urls', namespace='panopticon')),
+        url(r'', include('panopticon.django.urls', namespace='panopticon')),
     ]
 
 Using this view at this point requires ``django-rest-framework`` (DRF) to be
@@ -205,4 +205,4 @@ License
 
 This code is licensed under the `MIT License`_.
 
-.. _`MIT License`: https://github.com/mobify/python-panopticon/blob/master/LICENSE
+.. _`MIT License`: https://github.com/elbaschid/python-panopticon/blob/master/LICENSE
