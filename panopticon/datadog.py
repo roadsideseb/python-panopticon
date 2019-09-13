@@ -97,7 +97,7 @@ class DataDog(object):
 
         default_tags = cls._get_value_for_key(settings, cls.KEY_DATADOG_DEFAULT_TAGS)
         cls._default_tags = default_tags or {}
-        cls._default_tags.update(tags)
+        cls._default_tags.update(tags or {})
 
     @classmethod
     def stats(cls):
