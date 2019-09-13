@@ -10,17 +10,16 @@ from collections import namedtuple
 from .datadog import DataDog
 
 
-HealthCheckResult = namedtuple('HealthCheckResult',
-                               ('name', 'data', 'is_healthy'))
+HealthCheckResult = namedtuple("HealthCheckResult", ("name", "data", "is_healthy"))
 
 
 class HealthCheck(object):
-    HEALTHY = 'healthy'
-    RESPONSE_TIME = 'response_time'
-    SERVICE_HEALTHY = 'service_healthy'
-    TIMESTAMP = 'timestamp'
-    COMPONENTS = 'components'
-    STATUS_MESSAGE = 'status_message'
+    HEALTHY = "healthy"
+    RESPONSE_TIME = "response_time"
+    SERVICE_HEALTHY = "service_healthy"
+    TIMESTAMP = "timestamp"
+    COMPONENTS = "components"
+    STATUS_MESSAGE = "status_message"
 
     health_checks = {}
 
@@ -34,7 +33,8 @@ class HealthCheck(object):
             # values being in the dict.
             data = {
                 cls.HEALTHY: False,
-                cls.STATUS_MESSAGE: "Health check didn't provide a status 😭."}
+                cls.STATUS_MESSAGE: "Health check didn't provide a status 😭.",
+            }
 
             start = time.time()
 
@@ -52,14 +52,13 @@ class HealthCheck(object):
             healthy = data.get(cls.HEALTHY, False)
             if not healthy:
                 DataDog.stats().event(
-                    title='Healthcheck {} failed'.format(func_name),
+                    title="Healthcheck {} failed".format(func_name),
                     text=str(data),
-                    tags=['application:healtcheck'],
-                    alert_type='error')
+                    tags=["application:healtcheck"],
+                    alert_type="error",
+                )
 
-            return HealthCheckResult(name=func_name,
-                                     data=data,
-                                     is_healthy=healthy)
+            return HealthCheckResult(name=func_name, data=data, is_healthy=healthy)
 
         if func_name not in cls.health_checks:
             cls.health_checks[func_name] = wrapped
@@ -78,13 +77,13 @@ class HealthCheck(object):
 
         is_healthy = all(r.is_healthy for r in components)
 
-        data = {self.SERVICE_HEALTHY: is_healthy,
-                self.TIMESTAMP: datetime.now().isoformat(),
-                self.COMPONENTS: {r.name: r.data for r in components}}
+        data = {
+            self.SERVICE_HEALTHY: is_healthy,
+            self.TIMESTAMP: datetime.now().isoformat(),
+            self.COMPONENTS: {r.name: r.data for r in components},
+        }
 
-        return HealthCheckResult(name='system',
-                                 data=data,
-                                 is_healthy=is_healthy)
+        return HealthCheckResult(name="system", data=data, is_healthy=is_healthy)
 
 
 def check_url(url, expected_status=200, timeout=5):
@@ -92,22 +91,25 @@ def check_url(url, expected_status=200, timeout=5):
     A simple check if `url` is reachable and resturns `expected_status`.
     """
     if not url:
-        return {HealthCheck.HEALTHY: False,
-                HealthCheck.STATUS_MESSAGE: 'No URL specified to check.'}
+        return {
+            HealthCheck.HEALTHY: False,
+            HealthCheck.STATUS_MESSAGE: "No URL specified to check.",
+        }
 
     try:
         response = requests.get(url, timeout=timeout)
     except requests.RequestException as exc:
-        message = 'Error connecting to URL: {}'.format(str(exc))
-        return {HealthCheck.HEALTHY: False,
-                HealthCheck.STATUS_MESSAGE: message}
+        message = "Error connecting to URL: {}".format(str(exc))
+        return {HealthCheck.HEALTHY: False, HealthCheck.STATUS_MESSAGE: message}
 
     if expected_status == response.status_code:
-        return {HealthCheck.HEALTHY: True,
-                HealthCheck.STATUS_MESSAGE: 'URL is available'}
+        return {
+            HealthCheck.HEALTHY: True,
+            HealthCheck.STATUS_MESSAGE: "URL is available",
+        }
 
-    message = 'server responded with unexpected status code: {}'.format(
-        response.status_code)
+    message = "server responded with unexpected status code: {}".format(
+        response.status_code
+    )
 
-    return {HealthCheck.HEALTHY: False,
-            HealthCheck.STATUS_MESSAGE: message}
+    return {HealthCheck.HEALTHY: False, HealthCheck.STATUS_MESSAGE: message}

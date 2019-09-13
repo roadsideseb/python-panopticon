@@ -61,7 +61,7 @@ class DataDog(object):
 
     # this is just the default
     STATS_ENABLED = False
-    STATS_PREFIX = 'panopticon'
+    STATS_PREFIX = "panopticon"
 
     ROLLUP_INTERVAL = 10
     FLUSH_INTERVAL = 10
@@ -83,14 +83,13 @@ class DataDog(object):
         """
         Configure the settings to be used within datadog.
         """
-        cls.STATS_ENABLED = cls._get_value_for_key(settings,
-                                                   cls.KEY_DATADOG_ENABLED,
-                                                   default=False)
-        cls.STATS_PREFIX = cls._get_value_for_key(settings,
-                                                  cls.KEY_DATADOG_STATS_PREFIX,
-                                                  default=cls.STATS_PREFIX)
+        cls.STATS_ENABLED = cls._get_value_for_key(
+            settings, cls.KEY_DATADOG_ENABLED, default=False
+        )
+        cls.STATS_PREFIX = cls._get_value_for_key(
+            settings, cls.KEY_DATADOG_STATS_PREFIX, default=cls.STATS_PREFIX
+        )
         cls._default_tags = tags or {}
-
 
         api_key = cls._get_value_for_key(settings, cls.KEY_DATADOG_API_KEY)
         cls.settings[cls.KEY_DATADOG_API_KEY] = api_key
@@ -125,8 +124,9 @@ class DataDog(object):
             datadog.initialize(api_key=api_key)
 
             cls._stats_instance = datadog.ThreadStats()
-            cls._stats_instance.start(roll_up_interval=cls.ROLLUP_INTERVAL,
-                                      flush_interval=cls.FLUSH_INTERVAL)
+            cls._stats_instance.start(
+                roll_up_interval=cls.ROLLUP_INTERVAL, flush_interval=cls.FLUSH_INTERVAL
+            )
 
         return cls._stats_instance
 
@@ -137,7 +137,7 @@ class DataDog(object):
         given a list of metric name components as args, or a single metric
         name.
         """
-        return '.'.join((cls.STATS_PREFIX,) + args)
+        return ".".join((cls.STATS_PREFIX,) + args)
 
     @classmethod
     def stop(cls):
@@ -307,12 +307,8 @@ class DataDog(object):
                 MarkDown (see http://docs.datadoghq.com/guides/markdown/ )
             tags (list or dict): miscellaneous tags to describe the value
         """
-        cls.stats().event(
-            title,
-            text,
-            tags=cls._convert_tags(tags),
-            **kwargs
-        )
+        cls.stats().event(title, text, tags=cls._convert_tags(tags), **kwargs)
+
 
 atexit.register(DataDog.stop)
 
