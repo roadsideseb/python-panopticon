@@ -53,9 +53,11 @@ class DataDog(object):
     about how DataDog collects different types of metrics.
 
     """
-    KEY_DATADOG_API_KEY = 'DATADOG_API_KEY'
-    KEY_DATADOG_ENABLED = 'DATADOG_STATS_ENABLED'
-    KEY_DATADOG_STATS_PREFIX = 'DATADOG_STATS_PREFIX'
+
+    KEY_DATADOG_API_KEY = "DATADOG_API_KEY"
+    KEY_DATADOG_ENABLED = "DATADOG_STATS_ENABLED"
+    KEY_DATADOG_STATS_PREFIX = "DATADOG_STATS_PREFIX"
+    KEY_DATADOG_DEFAULT_TAGS = "DATADOG_DEFAULT_TAGS"
 
     # this is just the default
     STATS_ENABLED = False
@@ -77,7 +79,7 @@ class DataDog(object):
         return value
 
     @classmethod
-    def configure_settings(cls, settings):
+    def configure_settings(cls, settings, tags=None):
         """
         Configure the settings to be used within datadog.
         """
@@ -87,9 +89,15 @@ class DataDog(object):
         cls.STATS_PREFIX = cls._get_value_for_key(settings,
                                                   cls.KEY_DATADOG_STATS_PREFIX,
                                                   default=cls.STATS_PREFIX)
+        cls._default_tags = tags or {}
+
 
         api_key = cls._get_value_for_key(settings, cls.KEY_DATADOG_API_KEY)
         cls.settings[cls.KEY_DATADOG_API_KEY] = api_key
+
+        default_tags = cls._get_value_for_key(settings, cls.KEY_DATADOG_DEFAULT_TAGS)
+        cls._default_tags = default_tags or {}
+        cls._default_tags.update(tags)
 
     @classmethod
     def stats(cls):
@@ -204,15 +212,13 @@ class DataDog(object):
         Returns:
             [str]
         """
+        converted_tags = _tags_as_list(cls._default_tags)
         if isinstance(tags, dict):
-            result = [
-                '{}:{}'.format(key, value)
-                for key, value in tags.items()
-            ]
+            converted_tags += _tags_as_list(tags)
         else:
-            result = list(tags)
+            converted_tags = list(tags)
 
-        return sorted(result)
+        return sorted(converted_tags)
 
     @classmethod
     def gauge(cls, metric_name, value, tags=None, **kwargs):
@@ -309,3 +315,7 @@ class DataDog(object):
         )
 
 atexit.register(DataDog.stop)
+
+
+def _tags_as_list(tags: dict):
+    return ["{}:{}".format(key, value) for key, value in tags.items()]
