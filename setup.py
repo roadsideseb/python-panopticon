@@ -32,7 +32,7 @@ class PyTest(TestCommand):
 
 setup(
     name="python-panopticon",
-    version="0.3.0",
+    version="0.4.0",
     description="A collection of healthcheck and monitoring helpers.",
     long_description="\n\n".join([open("README.rst").read()]),
     license="MIT",
