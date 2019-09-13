@@ -3,20 +3,20 @@ language: python
 # Use specific matrix builds to ensure tox build against correct Python version
 # https://github.com/travis-ci/travis-ci/issues/4794#issuecomment-143758799
 matrix:
-    include:
-        - python: 2.7
-          env:
-            - TOX_ENV=py27
-        - python: 3.4
-          env:
-            - TOX_ENV=py34
-        - python: 3.5
-          env:
-            - TOX_ENV=py35
+  include:
+    - python: 2.7
+      env:
+        - TOX_ENV=py27
+    - python: 3.4
+      env:
+        - TOX_ENV=py34
+    - python: 3.5
+      env:
+        - TOX_ENV=py35
 
 before_script:
-    - pip install tox rstcheck
+  - pip install tox rstcheck
 
 script:
-    - tox -e ${TOX_ENV}
-    - rstcheck README.rst
+  - tox -e ${TOX_ENV}
+  - rstcheck README.rst
